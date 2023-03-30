@@ -4,20 +4,20 @@ function menu() {
   <div class="row" style="position: fixed; top: 30%; right: 0.6%; z-index: 1">
     <div class="col-sm-auto bg-dark sticky-top">
       <div class="d-flex flex-sm-column flex-row flex-nowrap bg-dark align-items-center sticky-top">
-        <a href="../user/home.html" class="d-block p-3 link-light text-decoration-none" title=""
+        <a href="/index.html" class="d-block p-3 link-light text-decoration-none" title=""
           data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Trang chủ">
           <i class="fa fa-home" style="font-size: 25px;"></i>
         </a>
         <ul
           class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
           <li class="nav-item">
-            <a href="../user/list-order.html" class="nav-link link-light py-3 px-2" title="" data-bs-toggle="tooltip"
+            <a href="/list-order.html" class="nav-link link-light py-3 px-2" title="" data-bs-toggle="tooltip"
               data-bs-placement="right" data-bs-original-title="Danh sách">
               <i class="fa fa-list" style="font-size: 25px;"></i>
             </a>
           </li>
           <li>
-            <a href="../user/history-orders.html" class="nav-link link-light py-3 px-2" title=""
+            <a href="/history-orders.html" class="nav-link link-light py-3 px-2" title=""
               data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Lịch sử đơn hàng">
               <i class="fa fa-history" style="font-size: 25px;"></i>
             </a>
@@ -33,7 +33,7 @@ function menu() {
             
           </li>
           <li>
-            <a href="../user/carts.html" class="nav-link link-light py-3 px-2 position-relative" title="" data-bs-toggle="tooltip"
+            <a href="/carts.html" class="nav-link link-light py-3 px-2 position-relative" title="" data-bs-toggle="tooltip"
               data-bs-placement="right" data-bs-original-title="Giỏ hàng">
               <i class="fa fa-shopping-cart position-relative shopping-cart " style="font-size: 1.5rem !important;">
 
@@ -43,7 +43,7 @@ function menu() {
             </a>
           </li>
           <li>
-            <a href="../user/statistics-order-food.html" class="nav-link link-light py-3 px-2" title="" data-bs-toggle="tooltip"
+            <a href="/statistics-order-food.html" class="nav-link link-light py-3 px-2" title="" data-bs-toggle="tooltip"
               data-bs-placement="right" data-bs-original-title="Thống kê">
 
               <i class="fa fa-table-cells" style="font-size: 25px;"></i>
@@ -161,9 +161,7 @@ $(document).ready(() => {
                 <div class="col-8" style="position: absolute; top: 15%">
                   <div style="font-size: 6rem">Gọi món Minh Việt</div>
                   <br />
-                  <div style="font-size: 4rem">
-                    <span style="color: #ffcc00">Hỗ trợ:</span> 0398550111
-                  </div>
+                  
                 </div>
                 </div>
                 </div>`;
@@ -178,7 +176,7 @@ function logout() {
     confirmButtonText: "OK",
   }).then((result) => {
     delete_cookie("token");
-    window.location.href = "../user/login.html";
+    window.location.href = "/login.html";
   });
 }
 function changePassword() {
@@ -203,7 +201,7 @@ function changePassword() {
           confirmButtonText: "OK",
         }).then((result) => {
           delete_cookie("token");
-          window.location.href = "../user/login.html";
+          window.location.href = "/login.html";
         });
       } else {
         Swal.fire({

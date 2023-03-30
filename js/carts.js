@@ -1,10 +1,5 @@
 showPageCart();
-// <th scope="col">STT</th>
-// <th scope="col">Ảnh món</th>
-// <th scope="col">Tên món</th>
-// <th scope="col">Mô tả</th>
-// <th scope="col">Số lượng</th>
-// <th scope="col">Thành tiền</th>
+
 function showPageCart() {
   let cartItems = localStorage.getItem("productsInCart");
   let numberItems = localStorage.getItem("cartNumbers");
@@ -21,28 +16,24 @@ function showPageCart() {
       productContainer.innerHTML += `
             <tr>
                 <td class="align-middle"> <b>${index + 1}</b> </td>    
-                <td  class="align-middle col-2"><img src="${
-                  item.photos
-                }" class="productPageCart_img w-100"></td>
-                <td class="align-middle  productPageCart_name text-break" >${
-                  item.name
-                }</td>
-                <td class="align-middle productPageCart_description text-break" >${
-                  item.description
-                }</td>
+                <td  class="align-middle col-2"><img src="${item.photos
+        }" class="productPageCart_img w-100"></td>
+                <td class="align-middle  productPageCart_name text-break" >${item.name
+        }</td>
+                <td class="align-middle productPageCart_description text-break" >${item.description
+        }</td>
                 <td class="align-middle">
                 <button class="btn btn-warning text-white f-s-20 dec-button" class="spinner-button" onclick="subNumber(${index})" >-</button>
-                <input type="number" min="1" max="50" step="1" value="${
-                  item.quantity
-                }" class="productPageCart_sl">
+                <input type="number" min="1" max="50" step="1" value="${item.quantity
+        }" class="productPageCart_sl">
                 <button class="btn btn-success f-s-20 inc-button" class="spinner-button" onclick="addNumber(${index})" >+</button>
                 </td>
                 <td class="align-middle productPageCart_price"> ${formatNumber(
-                  item.price
-                )}${item.unit}</td>
+          item.price
+        )}${item.unit}</td>
                 <td class="align-middle productPageCart_tt"  >${formatNumber(
-                  Number(item.price) * item.quantity
-                )}${item.unit}</td>
+          Number(item.price) * item.quantity
+        )}${item.unit}</td>
                 <td class="align-middle"><button class="btn btn-danger  deleteProductCart"   onclick="removeProductCart(${index})"><i class="far fa-trash-alt "></i></button></td>  
             </tr> 
             `;
@@ -71,7 +62,9 @@ function showPageCart() {
   }
   document.querySelector(".totalSumCart").textContent = total + " đ";
   // document.querySelector('.totalSum').textContent=total;
-  document.querySelector(".numbers_product").textContent = numberItems;
+  console.log(numberItems);
+  // document.querySelector(".numbers_product").textContent = `${numberItems}`;
+  $(".numbers_product").text(`${numberItems}`);
   let quantityProductBlur = document.querySelectorAll(".productPageCart_sl");
   for (let i = 0; i < quantityProductBlur.length; i++) {
     quantityProductBlur[i].addEventListener("blur", () => {
@@ -80,6 +73,11 @@ function showPageCart() {
     });
   }
 }
+/**
+ * It removes the product from the cart and updates the total cost and the number of products in the
+ * cart.
+ * @param i - the index of the product in the cart
+ */
 function removeProductCart(i) {
   let delProduct = document.querySelectorAll(".deleteProductCart");
   let blockProduct = delProduct[i].parentElement.parentElement;
@@ -119,9 +117,14 @@ function removeProductCart(i) {
 function onloadCartNumbers() {
   let productNumbers = localStorage.getItem("cartNumbers");
   if (productNumbers) {
-    document.querySelector(".numbers_product").textContent = productNumbers;
+    // document.querySelector(".numbers_product").textContent = productNumbers;
+    $(".numbers_product").text(`${productNumbers}`);
   }
 }
+/**
+ * It updates the quantity of a product in the cart.
+ * @param i - the index of the product in the cart
+ */
 function updateQuantityProduct(i) {
   let quantityProductBlur = document.querySelectorAll(".productPageCart_sl");
   let new_quantityProduct = quantityProductBlur[i].value;
@@ -258,7 +261,7 @@ function sendCarts() {
         dishes: JSON.stringify(arr),
       },
       success: (data) => {
-        console.log();
+        console.log(data);
         localStorage.clear();
         if (data.status == 1) {
           Swal.fire({
@@ -270,8 +273,17 @@ function sendCarts() {
             // console.log('Đơn hàng đã được gửi');
             // console.log(arr);
             .then((result) => {
-              window.location.href = "./history-orders.html";
+              window.location.href = "/history-orders.html";
             });
+        } else {
+          Swal.fire({
+            title: "Thông báo!",
+            text: `${data.message}`,
+            icon: "error",
+            confirmButtonText: "OK",
+          }).then((result) => {
+            window.location.href = "/index.html";
+          });
         }
         // console.log(data);
       },
@@ -317,7 +329,12 @@ function getCookie(cname) {
   }
   return "";
 }
-onloadCartNumbers();
+$(document).ready(() => {
+  let productNumbers = localStorage.getItem("cartNumbers");
+  console.log(productNumbers);
+  $(".numbers_product").text(`${productNumbers}`);
+  // }
+});
 
 //Tooltip
 var tooltipTriggerList = [].slice.call(

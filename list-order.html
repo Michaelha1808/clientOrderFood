@@ -22,7 +22,7 @@
   <div class="container">
     <div class="row justify-content-between mt-5 algin-items-center">
       <div class="col-10 ps-0 pe-3">
-        <input onkeyup="getSetListFoods()" class="w-100 py-3 px-2" id="search" type="text" style="
+        <input class="w-100 py-3 px-2" id="search" type="text" style="
               border-radius: 10px;
               border: none;
               box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -43,6 +43,7 @@
         style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px">
         <thead class="">
           <tr class="align-middle f-s-20 border-top">
+            <th scope="col">STT</th>
             <th scope="col">Tên người đặt</th>
             <th scope="col">Thời gian đặt hàng</th>
             <th scope="col">Tên món</th>
@@ -75,7 +76,7 @@
       Authorization: `Bearer ${getCookie("token")}`,
     },
     success: (data) => {
-      console.log(data.list_order);
+      console.log(data);
       if (data.status == 0) {
         Swal.fire({
           title: "Thông báo!",
@@ -128,8 +129,12 @@
   }
   function renderHtml(data) {
     var html = "";
-    data.forEach((element) => {
+    data.forEach((element, index) => {
       html += `<tr>
+          <th rowspan=${element.dishes.length + 1
+        } class="align-middle" scope="row">
+        ${index + 1}
+        </th>
           <th rowspan=${element.dishes.length + 1
         } class="align-middle border-end name" scope="row">${element.username
         }</th>
@@ -148,69 +153,18 @@
                 <td class="align-middle text-center f-s-14">${el.quantity}</td>
                 <td class="align-middle text-center f-s-14 text-break">${el.description
           }</td>
-                <td class="align-middle text-center f-s-14">${formatNumber(el.price)} ${el.unit
-          }</td>
-                <td class="align-middle text-center f-s-14">${formatNumber(el.price * el.quantity)
-          } ${el.unit}</td>
+                <td class="align-middle text-center f-s-14">${formatNumber(
+            el.price
+          )} ${el.unit}</td>
+                <td class="align-middle text-center f-s-14">${formatNumber(
+            el.price * el.quantity
+          )} ${el.unit}</td>
                   </tr>`;
       }
       html += `</tr>`;
     });
     $("#list-order").html(html);
   }
-  function getSetListFoods() {
-    var input = $("#search").val();
-    $.ajax({
-      headers: {
-        Authorization: `Bearer ${getCookie("token")}`,
-      },
-      url: GVs.GETORDER,
-      type: "POST",
-      data: {
-        username: input,
-      },
-      success: (data) => {
-        renderHtml(data.list_order);
-      },
-    });
-  }
-
-
-
-  // function getHistoryOrders() {
-  //   $.ajax({
-  //     headers: {
-  //       Authorization: `Bearer ${getCookie("token")}`,
-  //     },
-  //     url: "http://192.168.1.19:8386/orders/getHistoryOrders",
-  //     type: "POST",
-  //     data: {
-  //       createTime: input,
-  //     },
-  //     success: (data) => {
-  //       debounce(() => data);
-  //       var html = "";
-  //       dataListOrder = data.list_order;
-  //       var selectHtml = "";
-  //       var arrTime = [];
-  //       data.list_order.forEach((element) => {
-  //         arrTime.push(element.createTime);
-  //       });
-  //       var newArrTime = arrTime.filter(
-  //         (value, index, self) => self.indexOf(value) === index
-  //       );
-  //       if (newArrTime != []) {
-  //         newArrTime.forEach((element) => {
-  //           selectHtml += `<option value=${new Date(element).toLocaleDateString("vi-VN")}</option>`;
-  //         });
-  //       }
-  //       $("#mySelect").html(selectHtml);
-  //       var valueSelect = $("#mySelect").val();
-  //       dataFilter = filterData(data.list_order, valueSelect);
-  //       renderHtml(dataFilter);
-  //     },
-  //   });
-  // }
 
   function getCookie(cname) {
     let name = cname + "=";
@@ -232,6 +186,11 @@
       return $1 + ".";
     });
   }
+
+  $("#search").keyup(() => {
+    dataSearch = dataFilter.filter(el => el.username.toLowerCase().includes($("#search").val().toLowerCase()))
+    renderHtml(dataSearch)
+  })
 </script>
 <script src="/js/nav.js"></script>
 

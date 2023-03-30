@@ -23,7 +23,7 @@ function getAllAccounts() {
           icon: "error",
           confirmButtonText: "OK",
         }).then((result) => {
-          window.location.href = "../user/home.html";
+          window.location.href = "/index.html";
         });
       } else {
         dataAcc = data.data;
@@ -206,11 +206,8 @@ $(".add-new").click(function () {
           class="material-icons"onclick="cancel_add()">&#xE872;</i></a>
       </td>` +
     "</tr>";
-  $("table").append(row);
-  $("table tbody tr")
-    .eq(index + 1)
-    .find(".add, .edit")
-    .toggle();
+  $("table").prepend(row);
+  $("table tbody tr").eq(0).find(".add, .edit").toggle();
   $('[data-toggle="tooltip"]').tooltip();
   $("#phoneNumber").blur((val) => {
     var input = val.target.value;

@@ -18,29 +18,120 @@ $(document).ready(() => {
           icon: "error",
           confirmButtonText: "OK",
         }).then((result) => {
-          window.location.href = "../user/login.html";
+          window.location.href = "/login.html";
         });
       } else {
-        // if (data.role == "user") {
-        //   $("#statistics-order-food").remove();
-        //   $("#account_management").remove();
-        // }
         $("#phoneNumber_account").attr("placeholder", data.phoneNumber);
         $("#nameUser").text(data.username);
         $("#nameAccount").text("Tên: " + data.username);
         $("#phoneAccount").text("Sô điện thoại: " + data.phoneNumber);
-        // $("#passwordAccount").text(data.password);
-        console.log(data);
         var cardListFood = "";
-        // console.log(data);
-        // localStorage.setItem("order", JSON.stringify(data));
-        menu = data;
-        // console.log(data);
+
         function formatNumber(num) {
           return ("" + num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, function ($1) {
             return $1 + ".";
           });
         }
+        // TODO Budget
+        console.log(data.time_now);
+        if (
+          data.budget != undefined &&
+          data.time_now != undefined &&
+          data.time_now != undefined
+        ) {
+          $("#budget").html(`Budget: ${formatNumber(data.budget)}đ`);
+          //TODO TimeOrder
+          console.log(new Date(data.time_now));
+          var countDownDate = addMinutes(
+            new Date(data.time_now),
+            Number(data.time_order)
+          );
+          // $("#time").html(
+          //   `End time: ${countDownDate.getHours()}h${countDownDate.getMinutes()}p`
+          // );
+          console.log(countDownDate);
+          var distance = countDownDate - new Date(data.time_now);
+
+          var z = setInterval(function () {
+            var distance = countDownDate.getTime() - new Date().getTime();
+            // distance -= 1000;
+
+            // Time calculations for days, hours, minutes and seconds
+            var hours = Math.floor(
+              (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            var minutes = Math.floor(
+              (distance % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+            document.getElementById("time").innerHTML =
+              hours + "h " + minutes + "m " + seconds + "s ";
+
+            // If the count down is over, write some text
+            if (distance < 0) {
+              clearInterval(z);
+              $("#time").css("left", "-33.4%");
+              $("#time").html(`Đã hết thời gian đặt hàng`);
+              // $(".addToCart").prop("disabled", true);
+              $(".addToCart").css("pointer-events", "none");
+              $(".addToCart").css("opacity", "0.7");
+              Swal.fire({
+                title: "Thông báo!",
+                text: "Đã hết thời gian đặt hàng",
+                icon: "error",
+                confirmButtonText: "OK",
+              });
+              localStorage.clear();
+
+              // $(".addToCart").click((event) => {
+              //   event.stopImmediatePropagation();
+
+              // });
+            }
+          }, 1000);
+        } else {
+          $("#timerCountdown").css("display", "none");
+          $("#budget").css("display", "none");
+          var x = setInterval(() => {
+            $(".addToCart").css("pointer-events", "none");
+            $(".addToCart").css("opacity", "0.7");
+          }, 1);
+        }
+
+        // var x = setInterval(() => {
+        //   var CountdownTime = countDownDate.getTime() - new Date().getTime();
+        //   if (CountdownTime <= 0) {
+        //     clearInterval(x);
+        //     $("#time").css("left", "-33.4%");
+        //     $("#time").html(`Đã hết thời gian đặt hàng`);
+        //     $(".addToCart").prop("disabled", true);
+
+        //     $(".addToCart").click((event) => {
+        //       event.stopImmediatePropagation();
+        //       Swal.fire({
+        //         title: "Thông báo!",
+        //         text: "Đã hết thời gian đặt hàng",
+        //         icon: "error",
+        //         confirmButtonText: "OK",
+        //       });
+        //     });
+        //   } else {
+        //     $(".addToCart").prop("disabled", false);
+        //   }
+        // }, 1);
+
+        function compare(a, b) {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        }
+        // console.log(data.foods.sort(compare));
         data.foods.forEach((el, index) => {
           // console.log(el);
           cardListFood += `<div class="col-lg-6 mb-5">
@@ -54,27 +145,23 @@ $(document).ready(() => {
 
                       <img
                       class=" img-fluid img-item "
-                      src="${
-                        el.photos
-                      }" style="border-radius: 2% 0 0 2%;width:350px;"
+                      src="${el.photos
+            }" style="border-radius: 2% 0 0 2%;width:350px;"
                       alt="">
                     
                   </div>
                   <div class="col-7 px-4 py-4">
-                    <div class="title f-s-24 name-item" style=" font-family: sans-serif; font-weight: bold;">${
-                      el.name
-                    }</div>
-                    <p class="text-break f-s-18 description-item">${
-                      el.description
-                    }</p>
+                    <div class="title f-s-24 name-item text-start" style=" font-family: sans-serif; font-weight: bold;">${el.name
+            }</div>
+                    <p class="text-break f-s-18 description-item">${el.description
+            }</p>
                     <div class="d-flex justify-content-between">
                       <div class="d-flex">
                         <span class="price f-s-24 sale" style=" font-family: sans-serif; font-weight: bold;">${formatNumber(
-                          el.price
-                        )} </span>
-                        <span class="unit" style=" font-family: sans-serif; font-weight: bold;">${
-                          el.unit
-                        }</span>
+              el.price
+            )} </span>
+                        <span class="unit" style=" font-family: sans-serif; font-weight: bold;">${el.unit
+            }</span>
                       </div>
 
                       <buttton id="addtocart" class="btn btn-danger addToCart add-to-cart" style="border: 1px solid ">Add to cart</buttton>
@@ -90,7 +177,7 @@ $(document).ready(() => {
           // console.log($(this).parent().parent().parent('.item'));
           var cart = $(".shopping-cart");
           var imgtodrag = $(this).parent().parent().parent(".item").find("img");
-          console.log(imgtodrag);
+          // console.log(imgtodrag);
           if (imgtodrag) {
             var imgclone = imgtodrag
               .clone()
@@ -150,15 +237,21 @@ $(document).ready(() => {
   // showCart()
 });
 
-// cart on homepage
+// cart on indexpage
 // console.log(carts.length);
 let products = [];
 
+/**
+ * When the page loads, if there is a value in localStorage for the key "cartNumbers", then set the
+ * text of the element with the class "numbers_product" to the value of the localStorage item.
+ */
 function onloadCartNumbers() {
   let productNumbers = localStorage.getItem("cartNumbers");
+  console.log(productNumbers);
   // console.log(productNumbers);
   // if (productNumbers) {
-  //   document.querySelector(".numbers_product").textContent = productNumbers;
+  // document.querySelector(".numbers_product").textContent = productNumbers;
+  $(".numbers_product").text(`${productNumbers}`);
   // }
 }
 function cartNumbers(index, carts) {
@@ -298,6 +391,11 @@ function showCart() {
   // document.getElementById('#unit-item').textContent = total;
 }
 
+/**
+ * It removes the product from the cart and updates the total cost and the number of products in the
+ * cart.
+ * @param i - the index of the product in the cart
+ */
 function removeProduct(i) {
   let del = document.querySelectorAll(".deleteProduct");
   let blockProduct = del[i].parentElement.parentElement.parentElement;
@@ -349,4 +447,7 @@ function getCookie(cname) {
   }
   return "";
 }
-console.log(localStorage.getItem("cartNumbers"));
+// console.log(localStorage.getItem("cartNumbers"));
+function addMinutes(date, minutes) {
+  return new Date(date.getTime() + minutes * 60000);
+}
